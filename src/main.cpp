@@ -11,7 +11,7 @@ MCP23017 mcp(0x20); // ที่อยู่ของ MCP23017 คือ 0x20
 
 
 // การตั้งค่าเครือข่าย
-const int num = 100;  // เปลี่ยนแค่ตัวนี้พอ
+const int num = 16;  // เปลี่ยนแค่ตัวนี้พอ
 
 byte mac[6] = {0xFE, 0xED, 0xBA, 0xFA, 0xFA, 0x00}; // MAC address ของ Ethernet shield
 
@@ -40,32 +40,35 @@ EthernetClient ethClient;
 PubSubClient client(ethClient);
 
 void statusGW() {
-     snprintf(ans, sizeof(ans), "%s/%01X%01X%01X%01X%01X%01X%01X%01X%01X", "OK", m1, m2, m3, m4,m5,m6,r1,r2,r3);
+    client.loop();
      delay(50);
+    snprintf(ans, sizeof(ans), "%s/%01X%01X%01X%01X%01X%01X%01X%01X%01X", "OK", m1, m2, m3, m4,m5,m6,r1,r2,r3);
+    delay(50);
   client.publish(("step/SIMS1000TOR/" + String(num)).c_str(), ans);
   }
 
-void LED() {
+
+ void  LED() {
    mcp.write1(0, LOW);  // เปิด Relay 1 
-    m1 = 1;
+    m1 = 1;    
     client.loop();
-    delay(10000);  // รอให้ Relay ถัดไปเปิด
+    delay(5000);  // รอให้ Relay ถัดไปเปิด
    mcp.write1(1, LOW);  // เปิด Relay 2 หลังจาก 10 วินาที
     m2 = 1;
     client.loop();
-    delay(10000);  // รอให้ Relay ถัดไปเปิด
+    delay(5000);  // รอให้ Relay ถัดไปเปิด
     mcp.write1(2, LOW);  // เปิด Relay 3
     m3 = 1;
     client.loop();
-    delay(10000);
+    delay(5000);
     mcp.write1(3, LOW);  // เปิด Relay 1 
     m4 = 1;
     client.loop();
-    delay(10000);  // รอให้ Relay ถัดไปเปิด
+    delay(5000);  // รอให้ Relay ถัดไปเปิด
    mcp.write1(4, LOW);  // เปิด Relay 2 หลังจาก 10 วินาที
     m5 = 1;
     client.loop();
-    delay(10000);  // รอให้ Relay ถัดไปเปิด
+    delay(5000);  // รอให้ Relay ถัดไปเปิด
     mcp.write1(5, LOW);  // เปิด Relay 3
     m6 = 1;
     client.loop();
@@ -241,21 +244,21 @@ if (!client.connected()) {
   }
   client.loop();  // ให้ MQTT client ทำงาน
 if(r1==0){
-  delay(3000);
+  delay(5000);
  mcp.write1(8, LOW);
         r1 = 1;
       delay(100);
       statusGW();
 } 
 if(r2==0){
-   delay(3000);
+   delay(5000);
  mcp.write1(10, LOW);
         r2 = 1;
     delay(100);
       statusGW();
 } 
 if(r3==0){
-   delay(3000);
+   delay(5000);
  mcp.write1(9, LOW);
         r3 = 1;
         delay(100);
